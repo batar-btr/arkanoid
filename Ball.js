@@ -1,12 +1,12 @@
 import { isWallCollision } from './utils.js';
 
 export default class Ball {
-  constructor(canvasWidth) {
-    this.width = canvasWidth;
-    this.height = canvasWidth;
-    this.radius = Math.floor(canvasWidth / 20);
-    this.x = canvasWidth / 2;
-    this.y = canvasWidth / 2;
+  constructor(canvasw) {
+    this.w = canvasw;
+    this.h = canvasw;
+    this.radius = Math.floor(canvasw / 60);
+    this.x = canvasw / 2;
+    this.y = canvasw / 2;
     this.color = 'green';
     this.angle = Math.PI * 2 * 0.6; // angle in rad
     this.speed = 3;
@@ -29,7 +29,7 @@ export default class Ball {
     this.x += this.shift.x;
     this.y += this.shift.y;
 
-    if (isWallCollision(this.x, this.radius, this.width)) { // check side wall collision
+    if (isWallCollision(this.x, this.radius, this.w)) { // check side wall collision
       this.shift.x *= -1;
     }
 
@@ -38,57 +38,57 @@ export default class Ball {
       this.y = this.radius;
     }
 
-    if (this.y > this.height - this.radius) { // check losing game
+    if (this.y > this.h - this.radius) { // check losing game
       this.shift.y *= -1;
-      this.y = this.height - this.radius;
+      this.y = this.h - this.radius;
     }
     // console.log('Update:',this.x, this.y);
   }
 
   checkRectCollision(rect) {
-    const { x, y, width, height } = rect;
+    const { x, y, w, h } = rect;
 
-    const centerRectX = x + width / 2;
-    const centerRectY = y + height / 2;
+    const centerRectX = x + w / 2;
+    const centerRectY = y + h / 2;
 
-    const distX = Math.abs(this.x - x - width / 2); // X distance between rect and circle centers
-    const distY = Math.abs(this.y - y - height / 2); // Y distance between rect and circle centers
+    const distX = Math.abs(this.x - x - w / 2); // X distance between rect and circle centers
+    const distY = Math.abs(this.y - y - h / 2); // Y distance between rect and circle centers
 
-    if (distX > (width / 2 + this.radius)) { // not collision
-      return;
+    if (distX > (w / 2 + this.radius)) { // not collision
+      return false;
     }
-    if (distY > (height / 2 + this.radius)) { // not collision
-      return;
+    if (distY > (h / 2 + this.radius)) { // not collision
+      return false;
     }
 
-    if (distX < (width / 2)) { // hit top or bottom side
+    if (distX < (w / 2)) { // hit top or bottom side
       this.shift.y *= -1;
       return true;
     }
 
-    if (distY < (height / 2)) { // hit left or right side
+    if (distY < (h / 2)) { // hit left or right side
       if (this.x < centerRectX) { // hit left side
         this.x = x - this.radius;
       }
       if (this.x > centerRectX) { //hit right side
-        this.x = x + width + this.radius;
+        this.x = x + w + this.radius;
       }
       this.shift.x *= -1;
       return true;
     }
     ////////////peak collision!!!!!!!!!!!!!!!!!
-    const legX = distX - width / 2;
-    const legY = distY - height / 2;
+    const legX = distX - w / 2;
+    const legY = distY - h / 2;
 
     const hypot = Math.hypot(legX, legY);
 
     if (hypot < this.radius) { // peak collision detected
 
       const rectPeaks = {
-        A: { x, y: y + height },
+        A: { x, y: y + h },
         B: { x, y },
-        C: { x: x + width, y },
-        D: { x: x + width, y: y + height }
+        C: { x: x + w, y },
+        D: { x: x + w, y: y + h }
       };
 
       const collisionPeak = Object.entries(rectPeaks).map(([key, { x, y }]) => { // Give a peak A || B || C || D
@@ -96,7 +96,7 @@ export default class Ball {
         const legY = this.y - y;
         const hypot = Math.hypot(legX, legY);
         return [key, hypot];
-      }).sort((a, b) => a[1] - b[1])[0][0];
+      }).sort((a, b) => a[1] - b[1])[0][0]; // Get smallest hypot => get peak
 
       const newAngle = Math.acos(legX / hypot);
 
@@ -109,12 +109,13 @@ export default class Ball {
 
       const isMinusX = Math.sign(this.shift.x) === 1 ? 1 : -1;
       const isMinusY = Math.sign(this.shift.y) === 1 ? 1 : -1;
-      this.shift.x =  Math.cos(newAngle) * this.speed * isMinusX;
+      this.shift.x = Math.cos(newAngle) * this.speed * isMinusX;
       this.shift.y = Math.sin(newAngle) * this.speed * isMinusY;
 
       switch (collisionPeak) {
         case 'A':
-          console.log('Hit A');
+          this.x = x - shiftX;
+          this.y = y + shiftY;
           break;
         case 'B':
           this.x = x - shiftX;
@@ -122,18 +123,22 @@ export default class Ball {
           console.log('Hit B');
           break;
         case 'C':
-          this.x = x + width + shiftX;
+          this.x = x + w + shiftX;
           this.y = y - shiftY;
           console.log('Hit C');
           break;
         case 'D':
+          this.x = x + w + shiftX;
+          this.y = y + h + shiftY;
           break;
       }
 
 
       this.shift.x *= -1;
       this.shift.y *= -1;
+      return true;
     }
+    return false;
 
   }
 
