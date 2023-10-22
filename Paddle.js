@@ -1,10 +1,10 @@
 export default class Paddle {
   constructor(canvasSize) {
     this.w = canvasSize / 6;
-    this.h = this.w;
+    this.h = this.w * 2;
     this.x = (canvasSize - this.w) / 2;
     this.y = canvasSize - this.h;
-    this.color = 'orange';
+    this.color = '#1f1f1f';
     this.speed = 3;
     this.right = false;
     this.left = false;
@@ -20,26 +20,26 @@ export default class Paddle {
       }
     });
 
-    document.addEventListener('keyup', ({key}) => {
+    document.addEventListener('keyup', ({ key }) => {
       if (key === 'ArrowLeft') {
         this.left = false;
       }
       if (key === 'ArrowRight') {
         this.right = false;
       }
-    })
+    });
 
   }
 
   update() {
-    if(this.right) {
+    if (this.right) {
       this.x += this.speed;
-    } 
-    if(this.left) {
+    }
+    if (this.left) {
       this.x -= this.speed;
     }
-    if(this.x > this.maxX) this.x = this.maxX;
-    if(this.x < this.minX) this.x = this.minX;
+    if (this.x > this.maxX) this.x = this.maxX;
+    if (this.x < this.minX) this.x = this.minX;
   }
 
   draw(ctx) {

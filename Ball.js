@@ -4,12 +4,12 @@ export default class Ball {
   constructor(canvasw) {
     this.w = canvasw;
     this.h = canvasw;
-    this.radius = Math.floor(canvasw / 20);
+    this.radius = Math.floor(canvasw / 10);
     this.x = canvasw / 2;
     this.y = canvasw / 2;
-    this.color = 'green';
+    this.color = '#1f1f1f';
     this.angle = Math.PI * 2 * 0.6; // angle in rad
-    this.speed = 0.1;
+    this.speed = 1;
     this.shift = {
       x: Math.cos(this.angle) * this.speed,
       y: Math.sin(this.angle) * this.speed
@@ -30,6 +30,12 @@ export default class Ball {
     this.y += this.shift.y;
 
     if (isWallCollision(this.x, this.radius, this.w)) { // check side wall collision
+      if(this.x > this.w / 2) {
+        this.x = this.w - this.radius;
+      }
+      if(this.x < this.w / 2) {
+        this.x = this.radius;
+      }
       this.shift.x *= -1;
     }
 

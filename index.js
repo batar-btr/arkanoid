@@ -16,7 +16,7 @@ canvas.width = canvasSize;
 canvas.height = canvasSize;
 
 let pause = false;
-const bricksRow = 4;
+const bricksRow = 10;
 const bricksColumn = 5;
 const bricksGap = 3;
 

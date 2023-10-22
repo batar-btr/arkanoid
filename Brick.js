@@ -6,7 +6,7 @@ export default class Brick {
     this.y = y;
     this.w = w;
     this.h = h;
-    this.color = randomColor();
+    this.color = 'gray';
     this.alive = true;
   }
   draw(ctx) {
