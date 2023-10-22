@@ -1,7 +1,7 @@
 export default class Paddle {
   constructor(canvasSize) {
     this.w = canvasSize / 6;
-    this.h = this.w / 6;
+    this.h = this.w;
     this.x = (canvasSize - this.w) / 2;
     this.y = canvasSize - this.h;
     this.color = 'orange';

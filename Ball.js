@@ -4,12 +4,12 @@ export default class Ball {
   constructor(canvasw) {
     this.w = canvasw;
     this.h = canvasw;
-    this.radius = Math.floor(canvasw / 60);
+    this.radius = Math.floor(canvasw / 20);
     this.x = canvasw / 2;
     this.y = canvasw / 2;
     this.color = 'green';
     this.angle = Math.PI * 2 * 0.6; // angle in rad
-    this.speed = 3;
+    this.speed = 2;
     this.shift = {
       x: Math.cos(this.angle) * this.speed,
       y: Math.sin(this.angle) * this.speed
@@ -103,29 +103,27 @@ export default class Ball {
       const shiftX = Math.cos(newAngle) * this.radius;
       const shiftY = Math.sin(newAngle) * this.radius;
 
-
-
       this.angle = newAngle;
-
-      const isMinusX = Math.sign(this.shift.x) === 1 ? 1 : -1;
-      const isMinusY = Math.sign(this.shift.y) === 1 ? 1 : -1;
-      this.shift.x = Math.cos(newAngle) * this.speed * isMinusX;
-      this.shift.y = Math.sin(newAngle) * this.speed * isMinusY;
+    
+      this.shift.x = Math.abs(Math.cos(newAngle) * this.speed);
+      this.shift.y = Math.abs(Math.sin(newAngle) * this.speed);
 
       switch (collisionPeak) {
         case 'A':
           this.x = x - shiftX;
           this.y = y + shiftY;
+          this.shift.x *= -1;
           break;
         case 'B':
           this.x = x - shiftX;
           this.y = y - shiftY;
-          console.log('Hit B');
+          this.shift.x *= -1;
+          this.shift.y *= -1;
           break;
         case 'C':
           this.x = x + w + shiftX;
           this.y = y - shiftY;
-          console.log('Hit C');
+          this.shift.y *= -1;
           break;
         case 'D':
           this.x = x + w + shiftX;
@@ -133,9 +131,6 @@ export default class Ball {
           break;
       }
 
-
-      this.shift.x *= -1;
-      this.shift.y *= -1;
       return true;
     }
     return false;

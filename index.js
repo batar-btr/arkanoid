@@ -59,6 +59,7 @@ function checkBricksCollision() {
       const isCollision = ball.checkRectCollision(brick);
       if (isCollision) {
         brick.alive = false;
+        break;
       }
     }
   }
