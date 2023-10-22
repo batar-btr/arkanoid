@@ -9,7 +9,7 @@ export default class Ball {
     this.y = canvasw / 2;
     this.color = 'green';
     this.angle = Math.PI * 2 * 0.6; // angle in rad
-    this.speed = 2;
+    this.speed = 0.1;
     this.shift = {
       x: Math.cos(this.angle) * this.speed,
       y: Math.sin(this.angle) * this.speed
@@ -111,8 +111,9 @@ export default class Ball {
       switch (collisionPeak) {
         case 'A':
           this.x = x - shiftX;
-          this.y = y + shiftY;
+          this.y = y + h + shiftY;
           this.shift.x *= -1;
+          console.log('A');
           break;
         case 'B':
           this.x = x - shiftX;

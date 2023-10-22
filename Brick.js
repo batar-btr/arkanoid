@@ -1,10 +1,12 @@
+import { randomColor } from './utils.js';
+
 export default class Brick {
   constructor(x, y, w, h) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
-    this.color = 'orange';
+    this.color = randomColor();
     this.alive = true;
   }
   draw(ctx) {

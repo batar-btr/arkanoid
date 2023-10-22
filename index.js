@@ -16,8 +16,8 @@ canvas.width = canvasSize;
 canvas.height = canvasSize;
 
 let pause = false;
-const bricksRow = 20;
-const bricksColumn = 10;
+const bricksRow = 4;
+const bricksColumn = 5;
 const bricksGap = 3;
 
 const ball = new Ball(canvasSize);
@@ -85,5 +85,18 @@ canvas.addEventListener('click', () => {
 });
 
 document.addEventListener('keydown', ({key}) => {
-  console.log(ball.shift.x, ball.shift.y);
+  if(key !== 'ArrowUp' && key !== 'ArrowDown') return;
+  if(key === 'ArrowUp') {
+    ball.speed += 0.1;
+  }
+  if(key === 'ArrowDown') {
+    ball.speed -= 0.1;
+  }
+
+  const shiftXMinus = Math.sign(ball.shift.x) === -1 ? -1 : 1;
+  const shiftYMinus = Math.sign(ball.shift.y) === -1 ? -1 : 1;
+  console.log(shiftXMinus, shiftYMinus);
+
+  ball.shift.x = Math.cos(ball.angle) * ball.speed;
+  ball.shift.y = Math.sin(ball.angle) * ball.speed;
 })
