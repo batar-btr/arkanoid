@@ -4,7 +4,7 @@ export default class Ball {
   constructor(canvasw) {
     this.w = canvasw;
     this.h = canvasw;
-    this.radius = Math.floor(canvasw / 10);
+    this.radius = Math.floor(canvasw / 30);
     this.x = canvasw / 2;
     this.y = canvasw / 2;
     this.color = '#1f1f1f';
@@ -15,13 +15,58 @@ export default class Ball {
       y: Math.sin(this.angle) * this.speed
     };
   }
-  draw(ctx) {
+  draw(ctx, paddle) {
+    const paddleCenter = paddle.x + paddle.w / 2;
+    const legX = paddleCenter - this.x;
+    const legY = this.h - this.y;
+    const hypot = Math.hypot(legX, legY);
+    const angle = Math.acos(legX / hypot);
+
+    const eyeBall = this.radius / 3;
+    const pupil = eyeBall * 0.6;
+    const eyeShiftX = this.radius * 0.4;
+    const eyeShiftY = eyeShiftX / 2;
+
     ctx.save();
     ctx.fillStyle = this.color;
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     ctx.closePath();
     ctx.fill();
+    ctx.fillStyle = 'whitesmoke';
+    ctx.translate(this.x, this.y); // center ball
+    ctx.beginPath();
+    ctx.arc(eyeShiftX, -eyeShiftY, eyeBall, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.save();
+    ctx.translate(eyeShiftX, -eyeShiftY); // right eye
+    ctx.rotate(angle);
+    ctx.fillStyle = '#1f1f1f';
+    ctx.beginPath();
+    ctx.arc(eyeBall - pupil, 0, pupil, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    ctx.beginPath();
+    ctx.arc(-eyeShiftX, -eyeShiftY, eyeBall, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.save();
+    ctx.translate(-eyeShiftX, -eyeShiftY); // left eye
+    ctx.rotate(angle);
+    ctx.fillStyle = '#1f1f1f';
+    ctx.beginPath();
+    ctx.arc(eyeBall - pupil, 0, pupil, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    ctx.strokeStyle = 'whitesmoke';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0,0,this.radius * 0.7, Math.PI * 0.2, Math.PI * 0.8);
+    ctx.stroke();
+    // ctx.fillStyle = 'green'
+    // ctx.font = '14px Arial';
+    // ctx.textAlign = 'center';
+    // ctx.textBaseline = 'middle';
+    // ctx.fillText(angle, 0, 0);
     ctx.restore();
   }
 
@@ -30,10 +75,10 @@ export default class Ball {
     this.y += this.shift.y;
 
     if (isWallCollision(this.x, this.radius, this.w)) { // check side wall collision
-      if(this.x > this.w / 2) {
+      if (this.x > this.w / 2) {
         this.x = this.w - this.radius;
       }
-      if(this.x < this.w / 2) {
+      if (this.x < this.w / 2) {
         this.x = this.radius;
       }
       this.shift.x *= -1;
@@ -110,7 +155,7 @@ export default class Ball {
       const shiftY = Math.sin(newAngle) * this.radius;
 
       this.angle = newAngle;
-    
+
       this.shift.x = Math.abs(Math.cos(newAngle) * this.speed);
       this.shift.y = Math.abs(Math.sin(newAngle) * this.speed);
 

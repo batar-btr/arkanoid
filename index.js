@@ -16,8 +16,8 @@ canvas.width = canvasSize;
 canvas.height = canvasSize;
 
 let pause = false;
-const bricksRow = 10;
-const bricksColumn = 5;
+const bricksRow = 5;
+const bricksColumn = 3;
 const bricksGap = 3;
 
 const ball = new Ball(canvasSize);
@@ -73,7 +73,7 @@ function draw() {
   ball.checkRectCollision(paddle);
   checkBricksCollision();
   drawBricks();
-  ball.draw(ctx);
+  ball.draw(ctx, paddle);
   paddle.draw(ctx);
 }
 
