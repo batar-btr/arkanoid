@@ -4,7 +4,9 @@ import Paddle from './Paddle.js';
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
-document.body.append(canvas);
+const canvasWrap = document.querySelector('#canvas-wrap');
+const bricksWrap = document.querySelector('.bricks');
+canvasWrap.append(canvas);
 
 const { innerWidth: iw, innerHeight: ih } = window;
 
@@ -16,9 +18,11 @@ canvas.width = canvasSize;
 canvas.height = canvasSize;
 
 let pause = false;
-const bricksRow = 5;
-const bricksColumn = 3;
+const bricksRow = 10;
+const bricksColumn = 4;
 const bricksGap = 3;
+
+bricksWrap.style.gridTemplateColumns = `repeat(${bricksRow}, 1fr)`;
 
 const ball = new Ball(canvasSize);
 const paddle = new Paddle(canvasSize);
@@ -35,10 +39,11 @@ function initBricks() {
     for (let row = 0; row < bricksRow; row++) {
       const x = (row + 1) * bricksGap + row * brickWidth;
       const y = (column + 1) * bricksGap + column * brickHeight;
-      bricks[column][row] = new Brick(x, y, brickWidth, brickHeight);
+      const brick = new Brick(x, y, brickWidth, brickHeight);
+      bricksWrap.append(brick.elem);
+      bricks[column][row] = brick;
     }
   }
-  console.log(bricks);
 }
 
 initBricks();
@@ -59,6 +64,7 @@ function checkBricksCollision() {
       const isCollision = ball.checkRectCollision(brick);
       if (isCollision) {
         brick.alive = false;
+        brick.hide();
         break;
       }
     }
@@ -100,3 +106,6 @@ document.addEventListener('keydown', ({key}) => {
   ball.shift.x = Math.cos(ball.angle) * ball.speed;
   ball.shift.y = Math.sin(ball.angle) * ball.speed;
 })
+
+console.dir(function() {})
+console.dir(() => {})

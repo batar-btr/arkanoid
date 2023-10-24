@@ -8,6 +8,45 @@ body {
   align-items: center;
 }
 
+#canvas-wrap {
+  position: relative;
+}
+
+.bricks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 3px;
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 3px;
+  box-sizing: border-box;
+}
+
+.bricks div {
+  background: #1f1f1f;
+  aspect-ratio: 1 / 0.5;
+  /* transition: all 0.2s ease-out; */
+}
+
+@keyframes hide-in {
+  from {
+    background: #1f1f1f;
+    transform: scale(1);
+  }
+  to {
+    background: transparent;
+    transform: scale(0);
+  }
+}
+
+.bricks div.hide {
+  animation: 0.2s ease-out 0s forwards hide-in;
+}
+
 canvas {
+  /* background: #282828 */
   background: whitesmoke
 }

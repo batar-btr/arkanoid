@@ -4,10 +4,11 @@ export default class Ball {
   constructor(canvasw) {
     this.w = canvasw;
     this.h = canvasw;
-    this.radius = Math.floor(canvasw / 30);
+    this.radius = Math.floor(canvasw / 20);
     this.x = canvasw / 2;
     this.y = canvasw / 2;
     this.color = '#1f1f1f';
+    // this.color = 'gold';
     this.angle = Math.PI * 2 * 0.6; // angle in rad
     this.speed = 1;
     this.shift = {
@@ -58,7 +59,8 @@ export default class Ball {
     ctx.fill();
     ctx.restore();
     ctx.strokeStyle = 'whitesmoke';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = this.radius / 10;
+    ctx.lineCap = 'round';
     ctx.beginPath();
     ctx.arc(0,0,this.radius * 0.7, Math.PI * 0.2, Math.PI * 0.8);
     ctx.stroke();
