@@ -27,10 +27,15 @@ bricksWrap.style.gridTemplateColumns = `repeat(${bricksRow}, 1fr)`;
 const ball = new Ball(canvasSize);
 const paddle = new Paddle(canvasSize);
 
+const pauseElem = document.createElement('div');
+pauseElem.classList.add('pause');
+pauseElem.textContent = 'pause';
+
+canvasWrap.append(pauseElem);
+
 const bricks = [];
 
 function initBricks() {
-
   const brickWidth = (canvasSize - bricksGap * (bricksRow + 1)) / bricksRow;
   const brickHeight = brickWidth / 2;
 
@@ -60,7 +65,7 @@ function checkBricksCollision() {
   for (let column = 0; column < bricksColumn; column++) {
     for (let row = 0; row < bricksRow; row++) {
       const brick = bricks[column][row];
-      if(!brick.alive) continue;
+      if (!brick.alive) continue;
       const isCollision = ball.checkRectCollision(brick);
       if (isCollision) {
         brick.alive = false;
@@ -69,6 +74,18 @@ function checkBricksCollision() {
       }
     }
   }
+}
+
+function setPause() {
+  pause = !pause;
+  if (!pause) {
+    pauseElem.classList.remove('active');
+    draw();
+  } else {
+    pauseElem.classList.add('active');
+  }
+  canvas.classList.toggle('blur');
+  bricksWrap.classList.toggle('blur');
 }
 
 function draw() {
@@ -85,17 +102,14 @@ function draw() {
 
 draw();
 
-canvas.addEventListener('click', () => {
-  pause = !pause;
-  if(!pause) draw();
-});
+canvas.addEventListener('click', () => setPause());
 
-document.addEventListener('keydown', ({key}) => {
-  if(key !== 'ArrowUp' && key !== 'ArrowDown') return;
-  if(key === 'ArrowUp') {
+document.addEventListener('keydown', ({ key }) => {
+  if (key !== 'ArrowUp' && key !== 'ArrowDown') return;
+  if (key === 'ArrowUp') {
     ball.speed += 0.1;
   }
-  if(key === 'ArrowDown') {
+  if (key === 'ArrowDown') {
     ball.speed -= 0.1;
   }
 
@@ -105,7 +119,9 @@ document.addEventListener('keydown', ({key}) => {
 
   ball.shift.x = Math.cos(ball.angle) * ball.speed;
   ball.shift.y = Math.sin(ball.angle) * ball.speed;
-})
+});
 
-console.dir(function() {})
-console.dir(() => {})
+document.addEventListener('keydown', ({ code }) => {
+  if (code !== 'Space') return;
+  setPause();
+});

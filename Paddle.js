@@ -28,7 +28,6 @@ export default class Paddle {
         this.right = false;
       }
     });
-
   }
 
   update() {

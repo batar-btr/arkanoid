@@ -13,7 +13,7 @@ export default class Ball {
     this.speed = 1;
     this.shift = {
       x: Math.cos(this.angle) * this.speed,
-      y: Math.sin(this.angle) * this.speed
+      y: Math.sin(this.angle) * this.speed,
     };
   }
   draw(ctx, paddle) {
@@ -62,7 +62,7 @@ export default class Ball {
     ctx.lineWidth = this.radius / 10;
     ctx.lineCap = 'round';
     ctx.beginPath();
-    ctx.arc(0,0,this.radius * 0.7, Math.PI * 0.2, Math.PI * 0.8);
+    ctx.arc(0, 0, this.radius * 0.7, Math.PI * 0.2, Math.PI * 0.8);
     ctx.stroke();
     // ctx.fillStyle = 'green'
     // ctx.font = '14px Arial';
@@ -76,7 +76,8 @@ export default class Ball {
     this.x += this.shift.x;
     this.y += this.shift.y;
 
-    if (isWallCollision(this.x, this.radius, this.w)) { // check side wall collision
+    if (isWallCollision(this.x, this.radius, this.w)) {
+      // check side wall collision
       if (this.x > this.w / 2) {
         this.x = this.w - this.radius;
       }
@@ -86,12 +87,14 @@ export default class Ball {
       this.shift.x *= -1;
     }
 
-    if (this.y < this.radius) { // check roof collision
+    if (this.y < this.radius) {
+      // check roof collision
       this.shift.y *= -1;
       this.y = this.radius;
     }
 
-    if (this.y > this.h - this.radius) { // check losing game
+    if (this.y > this.h - this.radius) {
+      // check losing game
       this.shift.y *= -1;
       this.y = this.h - this.radius;
     }
@@ -107,23 +110,29 @@ export default class Ball {
     const distX = Math.abs(this.x - x - w / 2); // X distance between rect and circle centers
     const distY = Math.abs(this.y - y - h / 2); // Y distance between rect and circle centers
 
-    if (distX > (w / 2 + this.radius)) { // not collision
+    if (distX > w / 2 + this.radius) {
+      // not collision
       return false;
     }
-    if (distY > (h / 2 + this.radius)) { // not collision
+    if (distY > h / 2 + this.radius) {
+      // not collision
       return false;
     }
 
-    if (distX < (w / 2)) { // hit top or bottom side
+    if (distX < w / 2) {
+      // hit top or bottom side
       this.shift.y *= -1;
       return true;
     }
 
-    if (distY < (h / 2)) { // hit left or right side
-      if (this.x < centerRectX) { // hit left side
+    if (distY < h / 2) {
+      // hit left or right side
+      if (this.x < centerRectX) {
+        // hit left side
         this.x = x - this.radius;
       }
-      if (this.x > centerRectX) { //hit right side
+      if (this.x > centerRectX) {
+        //hit right side
         this.x = x + w + this.radius;
       }
       this.shift.x *= -1;
@@ -135,21 +144,25 @@ export default class Ball {
 
     const hypot = Math.hypot(legX, legY);
 
-    if (hypot < this.radius) { // peak collision detected
+    if (hypot < this.radius) {
+      // peak collision detected
 
       const rectPeaks = {
         A: { x, y: y + h },
         B: { x, y },
         C: { x: x + w, y },
-        D: { x: x + w, y: y + h }
+        D: { x: x + w, y: y + h },
       };
 
-      const collisionPeak = Object.entries(rectPeaks).map(([key, { x, y }]) => { // Give a peak A || B || C || D
-        const legX = this.x - x;
-        const legY = this.y - y;
-        const hypot = Math.hypot(legX, legY);
-        return [key, hypot];
-      }).sort((a, b) => a[1] - b[1])[0][0]; // Get smallest hypot => get peak
+      const collisionPeak = Object.entries(rectPeaks)
+        .map(([key, { x, y }]) => {
+          // Give a peak A || B || C || D
+          const legX = this.x - x;
+          const legY = this.y - y;
+          const hypot = Math.hypot(legX, legY);
+          return [key, hypot];
+        })
+        .sort((a, b) => a[1] - b[1])[0][0]; // Get smallest hypot => get peak
 
       const newAngle = Math.acos(legX / hypot);
 
@@ -188,8 +201,5 @@ export default class Ball {
       return true;
     }
     return false;
-
   }
-
-
 }
